@@ -1,27 +1,6 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mark.db'
-db = SQLAlchemy(app)
-
-class student(db.Model):
-    USN = db.Column(db.Integer, primary_key = True)
-    Name = db.Column(db.String(100), nullable = False)
-    Email = db.Column(db.String(100), nullable = False)
-    Phone = db.Column(db.Integer, nullable = False)
-    Course = db.Column(db.String(100), nullable = False)
-    Semester = db.Column(db.Integer, nullable = False)
-    
-    def __init__(self,USN = None, Name=None, Email=None, Phone = None,Course = None, Semester = None):
-        self.USN = USN
-        self.Name = Name
-        self.Email = Email
-        self.Phone = Phone
-        self.Course = Course
-        self.Semester = Semester
-    
-    
+from flask import jsonify
+from db_file import db, student
+  
 def create(body):
     sUSN = str(body['USN'])
     sName = str(body['Name'])
@@ -66,31 +45,7 @@ def delete(body):
     db.session.commit()
 
 
-@app.route('/new_Entries', methods = ['POST'])
-def new():
-    body = request.get_json()
-    output = create(body)
-    return "Added"
 
-@app.route('/read_Entries', methods = ['GET'])
-def show(): 
-    output = read()
-    return output
-
-@app.route('/update_Entries', methods = ['PUT'])
-def updating():
-    body = request.get_json()
-    Output = update(body)
-    return "Updated Successfully"
-
-@app.route('/delete_Entries', methods = ['DELETE'])
-def remove(): 
-    body = request.get_json()
-    output = delete(body)
-    return "Delete Successful" 
-
-if __name__ == '__main__':
-    app.run(debug = True, port= 5000)
     
     
 """{
